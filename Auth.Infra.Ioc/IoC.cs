@@ -1,5 +1,7 @@
 ﻿using Auth.Application;
 using Auth.Application.Interfaces;
+using Auth.Services.Interfaces;
+using Auth.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,9 @@ namespace Auth.Infra.Ioc
     {
         public static void RegisterServices(IServiceCollection services)
         {
+
+            // Services
+            services.AddTransient<IEmailService, EmailService>();
 
             // Application
             services.AddTransient<IUserAppService, UserAppService>();

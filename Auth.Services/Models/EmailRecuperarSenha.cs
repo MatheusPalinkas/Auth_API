@@ -48,7 +48,7 @@ namespace Auth.Services.Models
         }
         private string UrlWithResetToken()
         {
-            var baseUrl = _configuration["Front:BaseURL"];
+            var baseUrl = _configuration["Front:AlterarSenhaURL"];
 
             return $"{baseUrl}?email={this.MailTo}&resetToken={this.ResetToken}";
         }

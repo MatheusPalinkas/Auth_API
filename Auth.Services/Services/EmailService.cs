@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Auth.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Auth.Services.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
 
@@ -18,7 +19,7 @@ namespace Auth.Services.Services
             _configuration = configuration;
         }
 
-        public void Send(MailMessage email)
+        public async void Send(MailMessage email)
         {
             var smtpClient = new SmtpClient(_configuration["Email:Host"], Convert.ToInt32(_configuration["Email:Port"]));
 
@@ -27,8 +28,7 @@ namespace Auth.Services.Services
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(_configuration["Email:UserName"], _configuration["Email:Password"]);
 
-            smtpClient.Send(email);
-
+            await smtpClient.SendMailAsync(email);
         }
     }
 }

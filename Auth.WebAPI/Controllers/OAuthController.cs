@@ -3,6 +3,7 @@ using Auth.Application.Validators;
 using Auth.Application.ViewModels;
 using Auth.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace Auth.WebAPI.Controllers
             var result = await _userAppService.Autenticar(request);
 
             if (!result.IsSucessed)
-                return Unauthorized();
+                return Unauthorized(new Response() { Errors = new List<string> { "Login ou senha incorretos" } });
 
             var tokenResponse = await _tokenAppService.RetornarJwt(request.Email);
             return Ok(tokenResponse);

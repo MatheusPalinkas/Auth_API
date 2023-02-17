@@ -9,6 +9,7 @@ using Auth.Application.Interfaces;
 using Auth.Application.Validators;
 using Auth.Application.ViewModels;
 using Auth.Domain.Entities;
+using Auth.Services.Interfaces;
 using Auth.Services.Models;
 using Auth.Services.Services;
 using FluentValidation;
@@ -22,15 +23,18 @@ namespace Auth.Application
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         public UserAppService(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         public async Task<Response> Autenticar(LoginViewModel loginViewModel)
@@ -87,8 +91,7 @@ namespace Auth.Application
                                 .AddMailTo(user.Email)
                                 .Build();
 
-            new EmailService(_configuration).Send(email);
-
+            _emailService.Send(email);
 
             return new Response
             {
@@ -121,7 +124,7 @@ namespace Auth.Application
             }
 
 
-            var result = await _userManager.ResetPasswordAsync(user, alterarSenhaViewModel.ResetToken, alterarSenhaViewModel.Senha);
+            var result = await _userManager.ResetPasswordAsync(user, alterarSenhaViewModel.ResetToken.Replace(" ", "+"), alterarSenhaViewModel.Senha);
 
             return new Response
             {
@@ -160,7 +163,7 @@ namespace Auth.Application
                     .AddMailTo(user.Email)
                     .Build();
 
-            new EmailService(_configuration).Send(email);
+            _emailService.Send(email);
 
             return new Response
             {

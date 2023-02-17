@@ -20,10 +20,12 @@ namespace Auth.Application.Validators
                 .NotEmpty().WithMessage("Reset token é obrigatório");
 
             RuleFor(e => e.Senha)
-                .NotEmpty().WithMessage("Senha é obrigatório");
+                .NotEmpty().WithMessage("Senha é obrigatório")
+                .MinimumLength(8).WithMessage("Senha deve ter ao menos 8 caracteres");
 
             RuleFor(e => e.ConfirmarSenha)
                 .NotEmpty().WithMessage("Confirmar Senha é obrigatório")
+                .MinimumLength(8).WithMessage("Confirmar Senha deve ter ao menos 8 caracteres")
                 .Equal(e => e.Senha).WithMessage("Senha e confirmar senha devem ser iguais");
         }
     }
